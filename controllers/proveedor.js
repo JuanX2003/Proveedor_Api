@@ -11,6 +11,22 @@ const proveedorGet = async (req, res = response) => {
     }
 };
 
+const proveedorGetById = async (req, res = response) => {
+    try {
+        const { id_proveedor } = req.params; // Obtener el ID del parámetro de la solicitud
+        const proveedor = await Proveedor.findById(id_proveedor); // Buscar el proveedor por su ID en la base de datos
+
+        if (!proveedor) { // Si no se encuentra el proveedor
+            return res.status(404).json({ msg: 'Proveedor no encontrado' });
+        }
+
+        res.json({ proveedor }); // Enviar el proveedor encontrado en la respuesta
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error en el servidor al obtener proveedor por ID' });
+    }
+};
+
 const proveedorPost = async (req, res = response) => {
     try {
         const { nombreproveedor, correoproveedor, telefono } = req.body;
@@ -39,7 +55,11 @@ const proveedorPut = async (req, res = response) => {
             return res.status(400).json({ msg: 'Por favor, proporcione nombre, correo y teléfono del proveedor' });
         }
 
-        const proveedor = await Proveedor.findOneAndUpdate({ id_proveedor }, { nombreproveedor, correoproveedor, telefono }, { new: true });
+        const proveedor = await Proveedor.findByIdAndUpdate(
+            id_proveedor,
+            { nombreproveedor, correoproveedor, telefono },
+            { new: true }
+        );
 
         if (!proveedor) {
             return res.status(404).json({ msg: 'Proveedor no encontrado' });
@@ -68,9 +88,11 @@ const proveedorDelete = async (req, res = response) => {
     }
 };
 
+
 module.exports = {
     proveedorGet,
     proveedorPost,
     proveedorPut,
-    proveedorDelete
+    proveedorDelete,
+    proveedorGetById
 };
