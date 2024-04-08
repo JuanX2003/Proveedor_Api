@@ -28,10 +28,19 @@ const proveedorDelete = (req, res = response) => {
     });
 };
 
+// Controlador para la solicitud GET por ID a la ruta de proveedores
+const proveedorGetById = (req, res = response) => {
+    res.json({
+        msg: 'GET API by ID' // Devuelve un objeto JSON con un mensaje indicando que se está accediendo a la API con GET por ID
+    });
+};
+
 // Exporta los controladores de las rutas de proveedores para que estén disponibles para otros módulos
 module.exports = {
     proveedorGet,
     proveedorPost,
     proveedorPut,
-    proveedorDelete
+    proveedorDelete,
+    proveedorGetById
 };
+
