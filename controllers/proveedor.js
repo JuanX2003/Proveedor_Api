@@ -74,15 +74,22 @@ const proveedorPut = async (req, res = response) => {
 
 const proveedorDelete = async (req, res = response) => {
     try {
+        // Extraer el id_proveedor de los parámetros de la solicitud
         const { id_proveedor } = req.params;
+
+        // Intentar encontrar y eliminar el proveedor por id_proveedor
         const proveedor = await Proveedor.findOneAndDelete({ id_proveedor });
 
+        // Si no se encuentra el proveedor, devolver un error 404
         if (!proveedor) {
             return res.status(404).json({ msg: 'Proveedor no encontrado' });
         }
 
+        // Si el proveedor se elimina correctamente, devolver un mensaje de éxito
         res.json({ msg: 'Proveedor eliminado exitosamente', proveedor });
+
     } catch (error) {
+        // Manejar cualquier error que ocurra durante la operación
         console.error(error);
         res.status(500).json({ msg: 'Error en el servidor al eliminar proveedor' });
     }
