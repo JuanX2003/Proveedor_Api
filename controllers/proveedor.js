@@ -1,6 +1,7 @@
 const { response } = require('express');
 const Proveedor = require('../modules/proveedor');
 
+// Obtener todos los proveedores
 const proveedorGet = async (req, res = response) => {
     try {
         const proveedores = await Proveedor.find();
@@ -11,27 +12,28 @@ const proveedorGet = async (req, res = response) => {
     }
 };
 
+// Obtener un proveedor por ID
 const proveedorGetById = async (req, res = response) => {
     try {
-        const { id_proveedor } = req.params; // Obtener el ID del parámetro de la solicitud
-        const proveedor = await Proveedor.findById(id_proveedor); // Buscar el proveedor por su ID en la base de datos
+        const { id_proveedor } = req.params;
+        const proveedor = await Proveedor.findById(id_proveedor);
 
-        if (!proveedor) { // Si no se encuentra el proveedor
+        if (!proveedor) {
             return res.status(404).json({ msg: 'Proveedor no encontrado' });
         }
 
-        res.json({ proveedor }); // Enviar el proveedor encontrado en la respuesta
+        res.json({ proveedor });
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Error en el servidor al obtener proveedor por ID' });
     }
 };
 
+// Crear un nuevo proveedor
 const proveedorPost = async (req, res = response) => {
     try {
         const { nombreproveedor, correoproveedor, telefono } = req.body;
 
-        // Validación de datos de entrada
         if (!nombreproveedor || !correoproveedor || !telefono) {
             return res.status(400).json({ msg: 'Por favor, proporcione nombre, correo y teléfono del proveedor' });
         }
@@ -45,12 +47,12 @@ const proveedorPost = async (req, res = response) => {
     }
 };
 
+// Actualizar un proveedor existente
 const proveedorPut = async (req, res = response) => {
     try {
         const { id_proveedor } = req.params;
         const { nombreproveedor, correoproveedor, telefono } = req.body;
 
-        // Validación de datos de entrada
         if (!nombreproveedor || !correoproveedor || !telefono) {
             return res.status(400).json({ msg: 'Por favor, proporcione nombre, correo y teléfono del proveedor' });
         }
@@ -72,34 +74,29 @@ const proveedorPut = async (req, res = response) => {
     }
 };
 
+// Eliminar un proveedor
 const proveedorDelete = async (req, res = response) => {
     try {
-        // Extraer el id_proveedor de los parámetros de la solicitud
         const { id_proveedor } = req.params;
 
-        // Intentar encontrar y eliminar el proveedor por id_proveedor
-        const proveedor = await Proveedor.findOneAndDelete({ id_proveedor });
+        const proveedor = await Proveedor.findByIdAndDelete(id_proveedor);
 
-        // Si no se encuentra el proveedor, devolver un error 404
         if (!proveedor) {
             return res.status(404).json({ msg: 'Proveedor no encontrado' });
         }
 
-        // Si el proveedor se elimina correctamente, devolver un mensaje de éxito
         res.json({ msg: 'Proveedor eliminado exitosamente', proveedor });
-
     } catch (error) {
-        // Manejar cualquier error que ocurra durante la operación
         console.error(error);
         res.status(500).json({ msg: 'Error en el servidor al eliminar proveedor' });
     }
 };
 
-
 module.exports = {
     proveedorGet,
+    proveedorGetById,
     proveedorPost,
     proveedorPut,
-    proveedorDelete,
-    proveedorGetById
+    proveedorDelete
 };
+
